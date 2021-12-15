@@ -4,7 +4,6 @@
 #include <iomanip>
 
 using namespace std;
-#define verbose false
 
 #include "TFile.h"
 #include "TTree.h"
@@ -13,12 +12,12 @@ using namespace std;
 #include "TProfile.h"
 #include "TMath.h"
 
-void Alignment_1(TTree *data_tree, Double_t correct_position[][2], int msd_stations);
-void Alignment_2(TTree *data_tree, Double_t correct_position[][2], int msd_stations);
-void Alignment_3(TTree *data_tree, Double_t correct_position[][2], int msd_stations, int iterations);
+void Alignment_1(TTree *data_tree, Double_t correct_position[][2], int msd_stations, bool verbose);
+void Alignment_2(TTree *data_tree, Double_t correct_position[][2], int msd_stations, bool verbose);
+void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t l_distances[], int msd_stations, int iterations, bool verbose);
 void compute_line(Double_t l_distances[], Double_t center_of_gravity[], Double_t &ang_coeff, Double_t &intercept, int msd_stations);
 
-void Alignment_1(TTree *data_tree, Double_t correct_position[][2], int msd_stations)
+void Alignment_1(TTree *data_tree, Double_t correct_position[][2], int msd_stations, bool verbose)
 {
   Int_t n_entries = data_tree->GetEntries();
   Double_t tmp_val[msd_stations][3];
@@ -97,7 +96,7 @@ void Alignment_1(TTree *data_tree, Double_t correct_position[][2], int msd_stati
 
 } //end Alignment_1 function
 
-void Alignment_2(TTree *data_tree, Double_t correct_position[][2], int msd_stations)
+void Alignment_2(TTree *data_tree, Double_t correct_position[][2], int msd_stations, bool verbose)
 {
 
   Int_t n_entries = data_tree->GetEntries();
@@ -195,7 +194,7 @@ void Alignment_2(TTree *data_tree, Double_t correct_position[][2], int msd_stati
 
 } //end Alignment_2 function
 
-void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t l_distances[], int msd_stations, int iterations)
+void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t l_distances[], int msd_stations, int iterations, bool verbose)
 {
   if (verbose)
     cout << "Trying to align " << msd_stations << " msd_stations" << endl;
@@ -241,8 +240,8 @@ void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t l_di
 
       h_residual[idx_l][0] = TH1F(h_residual_x_name, h_residual_x_name, 500, -0.1, 0.1);
       h_residual[idx_l][1] = TH1F(h_residual_y_name, h_residual_y_name, 500, -0.1, 0.1);
-      h_rotation[idx_l][0] = TProfile(h_rotation_x_name, h_rotation_x_name, 1000, -5, 5, -0.2, 0.2);
-      h_rotation[idx_l][1] = TProfile(h_rotation_y_name, h_rotation_y_name, 1000, -5, 5, -0.2, 0.2);
+      h_rotation[idx_l][0] = TProfile(h_rotation_x_name, h_rotation_x_name, 1000, -2.5, 2.5, -0.2, 0.2);
+      h_rotation[idx_l][1] = TProfile(h_rotation_y_name, h_rotation_y_name, 1000, -2.5, 2.5, -0.2, 0.2);
     }
 
     for (int idx = 0; idx < n_entries; idx++)
