@@ -36,6 +36,7 @@ int main(int argc, char **argv)
   Double_t tmp_val[msd_stations][3], l_distances[msd_stations];
   myTree->SetBranchAddress("Xmeas", tmp_val);
   myTree->GetEntry(0);
+
   for (int i = 0; i < msd_stations; i++)
   {
     l_distances[i] = tmp_val[i][2];
