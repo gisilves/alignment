@@ -14,7 +14,7 @@ using namespace std;
 
 void Alignment_1(TTree *data_tree, Double_t correct_position[][2], int msd_stations, bool verbose);
 void Alignment_2(TTree *data_tree, Double_t correct_position[][2], int msd_stations, bool verbose);
-void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t l_distances[], int msd_stations, int iterations, bool verbose);
+void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t rotation_angle[][2],Double_t l_distances[], int msd_stations, int iterations, bool verbose);
 void compute_line(Double_t l_distances[], Double_t center_of_gravity[], Double_t &ang_coeff, Double_t &intercept, int msd_stations);
 
 void Alignment_1(TTree *data_tree, Double_t correct_position[][2], int msd_stations, bool verbose)
@@ -194,13 +194,13 @@ void Alignment_2(TTree *data_tree, Double_t correct_position[][2], int msd_stati
 
 } //end Alignment_2 function
 
-void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t l_distances[], int msd_stations, int iterations, bool verbose)
+void Alignment_3(TTree *data_tree, Double_t correct_position[][2], Double_t rotation_angle[][2], Double_t l_distances[], int msd_stations, int iterations, bool verbose)
 {
   if (verbose)
     cout << "Trying to align " << msd_stations << " msd_stations" << endl;
 
   Int_t n_entries = data_tree->GetEntries(), iteration_number = iterations;
-  Double_t tmp_val[msd_stations][3], rotation_angle[msd_stations - 1][2], tmp_rotation[msd_stations][2], center_of_gravity[msd_stations], intercept, ang_coeff, residual, delta_angle[msd_stations-1][2];
+  Double_t tmp_val[msd_stations][3], tmp_rotation[msd_stations][2], center_of_gravity[msd_stations], intercept, ang_coeff, residual, delta_angle[msd_stations-1][2];
   Bool_t good_layer[msd_stations][2], proceed_track;
 
   data_tree->SetBranchAddress("Xmeas", tmp_val);
