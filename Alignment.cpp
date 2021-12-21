@@ -39,14 +39,34 @@ int main(int argc, char **argv)
 
   Int_t pos = TString(in_file->GetName()).First(".");
 
-  cout << "Aligning with run " << TString(in_file->GetName())(pos-8,8) << endl;
+  cout << "Aligning with run " << TString(in_file->GetName())(pos - 8, 8) << endl;
 
-  outfile.open("out_files/alignment_parameters_" + TString(in_file->GetName())(pos-8,8) + ".txt");
+  outfile.open("out_files/alignment_parameters_" + TString(in_file->GetName())(pos - 8, 8) + ".txt");
 
   TTree *myTree = (TTree *)gDirectory->Get("tree");
 
   Double_t tmp_val[msd_stations][3], l_distances[msd_stations];
-  myTree->SetBranchAddress("Xmeas", tmp_val);
+
+  if (myTree->SetBranchAddress("MSDmeas", tmp_val) < 0)
+  {
+    cout << "ERROR: MSDmeas branch is not present, checking for Xmeas branch" << endl;
+    if (myTree->SetBranchAddress("Xmeas", tmp_val) < 0)
+    {
+      cout << "ERROR: neither Xmeas nor MSDmeas branch is present" << endl;
+      return -1;
+    }
+    else
+    {
+      cout << "Found Xmeas branch" << endl;
+      myTree->SetBranchAddress("Xmeas", tmp_val);
+    }
+  }
+  else
+  {
+    cout << "Found MSDmeas branch" << endl;
+    myTree->SetBranchAddress("MSDmeas", tmp_val);
+  }
+
   myTree->GetEntry(0);
 
   for (int i = 0; i < msd_stations; i++)
@@ -93,6 +113,8 @@ int main(int argc, char **argv)
     cout << endl;
   }
 
+  cout << endl;
+
   outfile << "#MSD_STATION\t#VIEW\t#OFFSET_CORRECTION\t#ROTATION_CORRECTION\n";
   outfile << setw(5) << 0 << "\t" << 0 << "\t" << 0 << "\t" << rotation_angle[0][0] << "\n";
   outfile << setw(5) << 0 << "\t" << 1 << "\t" << 0 << "\t" << rotation_angle[0][1] << "\n";
@@ -102,6 +124,9 @@ int main(int argc, char **argv)
     for (int idx_p = 0; idx_p < 2; idx_p++)
       outfile << setw(5) << idx_l << "\t" << idx_p << "\t" << correct_position[idx_l - 1][idx_p] << "\t" << rotation_angle[idx_l][idx_p] << "\n";
   }
+
+  /////////////////// BIASED RESOLUTION ///////////////////
+  Resolution(myTree, correct_position, rotation_angle, l_distances, msd_stations, verbose);
 
   outfile.close();
   cout << "\n\nProgram completed correctly \n\n";
