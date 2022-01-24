@@ -534,11 +534,13 @@ void Resolution(TTree *data_tree, Double_t correct_position[][2], Double_t rotat
     for (int idx_l = 0; idx_l < msd_stations; idx_l++)
     {
       mean_z += l_distances[idx_l];
-      mean_z2 += l_distances[idx_l] * l_distances[idx_l];
+      mean_z2 += pow(l_distances[idx_l],2);
     }
 
     mean_z = mean_z / msd_stations;
     mean_z2 = mean_z2 / msd_stations;
+
+    // cout << "Mean z is " << mean_z << " and mean z2 is " << mean_z2 << endl;
 
     for (int idx_l = 0; idx_l < msd_stations; idx_l++)
     {
@@ -546,9 +548,10 @@ void Resolution(TTree *data_tree, Double_t correct_position[][2], Double_t rotat
       fittedgaus = (TF1 *)h_residual[idx_l][idx_p].GetListOfFunctions()->FindObject("gaus");
       h_residual[idx_l][idx_p].Write();
 
-      alpha = 1 + (mean_z * mean_z + l_distances[idx_l] - 2 * l_distances[idx_l] * mean_z) / (msd_stations * (mean_z2 - mean_z * mean_z));
+      alpha = 1 + (pow(mean_z,2) + pow(l_distances[idx_l],2) - 2 * l_distances[idx_l] * mean_z) / (msd_stations * (mean_z2 - pow(mean_z,2)));
 
       cout << "Resolution for detector " << 2 * idx_l + idx_p + 1 << " is " << fittedgaus->GetParameter(2) << endl;
+      // cout << "Alpha parameter is: " << alpha << endl;
       cout << "Resolution for detector (after correction) " << 2 * idx_l + idx_p + 1 << " is " << fittedgaus->GetParameter(2) / sqrt(alpha) << endl;
 
     }
