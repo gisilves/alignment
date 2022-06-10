@@ -125,7 +125,12 @@ int main(int argc, char **argv)
       outfile << setw(5) << idx_l << "\t" << idx_p << "\t" << correct_position[idx_l - 1][idx_p] << "\t" << rotation_angle[idx_l][idx_p] << "\n";
   }
 
-  /////////////////// BIASED RESOLUTION ///////////////////
+  for (int idx_l = 0; idx_l < msd_stations; idx_l++)
+  {
+    cout << "MSD station " << idx_l << " z position: " << l_distances[idx_l] << endl;
+  }
+
+  /////////////////// UNBIASED RESOLUTION ///////////////////
   Resolution(myTree, correct_position, rotation_angle, l_distances, msd_stations, verbose);
 
   outfile.close();
