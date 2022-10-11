@@ -50,13 +50,11 @@ int main(int argc, char **argv)
     }
     else
     {
-      cout << "Found Xmeas branch" << endl;
       myTree->SetBranchAddress("Xmeas", tmp_val);
     }
   }
   else
   {
-    cout << "Found MSDmeas branch" << endl;
     myTree->SetBranchAddress("MSDmeas", tmp_val);
   }
 

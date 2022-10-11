@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "ostream": "cpp",
+        "laser_waist.C": "cpp",
+        "graph.C": "cpp",
+        "bw_send03.C": "cpp",
+        "resolution_graph.C": "cpp",
+        "SaveMSDforAlign.C": "cpp",
+        "test_fit.C": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp",
+        "fit_residuals.C": "cpp"
+    }
+}
